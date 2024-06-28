@@ -34,21 +34,22 @@ int main(int argc, char* argv[])
 		// clear screen
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 		SDL_RenderClear(renderer);
+		for (int i = 0; i <= value; i++)
+		{
+			SDL_SetRenderDrawColor(renderer, 255, 255, 255, 0);
+			SDL_SetRenderDrawColor(renderer, rand() % 256, rand() % 256, rand() % 256, 0); // create random color
+			SDL_RenderDrawPoint(renderer, 400, 300);
 
-		// draw line
-		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 0);
-		SDL_RenderDrawLine(renderer, 0, 0, 800, 600);
+			// draw line
+			//SDL_SetRenderDrawColor(renderer, 255, 255, 255, 0);
+			SDL_RenderDrawLine(renderer, rand() % 800, rand() % 600, rand() % 800, rand() % 600);
+		}
 
 		// show screen
 		SDL_RenderPresent(renderer);
 	}
 	
-	for (int i = 0; i < value; i++) 
-	{
-		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 0);
-		SDL_SetRenderDrawColor(renderer, rand() % 256, rand() % 256, rand() % 256, 0); // create random color
-		SDL_RenderDrawPoint(renderer, 400, 300);
-	}
+	
 
 	return 0;
 }
