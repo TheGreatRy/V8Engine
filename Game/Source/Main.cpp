@@ -34,6 +34,7 @@ int main(int argc, char* argv[])
 		// clear screen
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 		SDL_RenderClear(renderer);
+		/* Random Line Generator
 		for (int i = 0; i <= value; i++)
 		{
 			SDL_SetRenderDrawColor(renderer, 255, 255, 255, 0);
@@ -44,6 +45,25 @@ int main(int argc, char* argv[])
 			//SDL_SetRenderDrawColor(renderer, 255, 255, 255, 0);
 			SDL_RenderDrawLine(renderer, rand() % 800, rand() % 600, rand() % 800, rand() % 600);
 		}
+		*/
+		// Geometric Shape
+		//outside lines
+		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 0);
+		SDL_RenderDrawLine(renderer, 100, 450, 350, 50);
+		SDL_RenderDrawLine(renderer, 100, 450, 175, 525);
+		SDL_RenderDrawLine(renderer, 350, 50, 450, 50);
+		SDL_RenderDrawLine(renderer, 450, 50, 700, 450);
+		SDL_RenderDrawLine(renderer, 700, 450, 625, 525);
+		SDL_RenderDrawLine(renderer, 175, 525, 625, 525);
+		//inside lines
+		SDL_RenderDrawLine(renderer, 175, 525, 350, 225);
+		SDL_RenderDrawLine(renderer, 350, 225, 435, 375);
+		SDL_RenderDrawLine(renderer, 350, 50, 538, 375);
+
+		SDL_RenderDrawLine(renderer, 325, 450, 700, 450);
+		SDL_RenderDrawLine(renderer, 362, 375, 538, 375);
+		SDL_RenderDrawLine(renderer, 395, 307, 325, 450);
+
 
 		// show screen
 		SDL_RenderPresent(renderer);
