@@ -1,5 +1,6 @@
 //#include "../../Engine/Source/Test.h"
 #include <SDL.h>
+#include <stdlib.h>
 #include <iostream>
 
 int main(int argc, char* argv[])
