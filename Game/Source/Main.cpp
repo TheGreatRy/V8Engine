@@ -9,25 +9,23 @@
 
 int main(int argc, char* argv[])
 {
-	
-	
 	Renderer renderer;
 	renderer.Initialize();
 	renderer.CreateWindow("Game Engine", 800, 600);
 
 	Input input;
-
-	Vector2 v1{ 400, 300 };
-	Vector2 v2{ 700, 500 };
+	input.Initialize();
+	/*Vector2 v1{ 400, 300 };
+	Vector2 v2{ 700, 500 };*/
 
 	std::vector<Vector2> points;
 	/*for (int i = 0; i < 100; i++)
 	{
 		points.push_back(Vector2{ rand() % 800, rand() % 600 });
 	}*/
-
+	bool quit = false;
 	//main loop
-	while (true)
+	while (!quit)
 	{
 		//input
 		// update
@@ -35,15 +33,24 @@ int main(int argc, char* argv[])
 
 		//INPUT
 		input.Update();
-		
+
+		if (input.GetKeyDown(SDL_SCANCODE_ESCAPE))
+		{
+			quit = true;
+		}
 		// UPDATE
 		Vector2 mousePosition = input.GetMousePostision();
-		//std::cout << mousePosition.x << ", " << mousePosition.y << std::endl;
+		std::cout << mousePosition.x << ", " << mousePosition.y << std::endl;
 
 		if (input.GetMouseButtonDown(0) && !input.GetPrevMouseButtonDown(0))
 		{
 			std::cout << "mouse pressed" << std::endl;
 			points.push_back(mousePosition);
+		}
+		if (input.GetMouseButtonDown(0) && input.GetPrevMouseButtonDown(0))
+		{
+			float distance = (points.back() - mousePosition).Length();
+			if (distance > 5) points.push_back(mousePosition);
 		}
 
 		/*Vector2 speed{ 0.5f, -0.5f };
@@ -56,14 +63,14 @@ int main(int argc, char* argv[])
 		renderer.BeginFrame();
 
 		//DRAW
-		//renderer.SetColor(255, 255, 255, 0);
+		renderer.SetColor(255, 255, 255, 0);
 		//renderer.DrawLine(v1.x, v1.y, v2.x, v2.y);
 		//renderer.SetColor(255, 255, 255, 0);
-		//for (int i = 0; i < points.size() - 1;i++)
-		//{
-		//	
-		//	renderer.DrawLine(points[i].x, points[i].y, points[i].x + 1, points[i].y + 1);
-		//}
+		for (int i = 0; points.size() > 1 && i < (points.size() - 1); i++)
+		{
+			renderer.SetColor(rand() % 256, rand() % 256, rand() % 256, 0); // create random color
+			renderer.DrawLine(points[i].x, points[i].y, points[i + 1].x , points[i + 1].y );
+		}
 
 		////Random Line Generator
 		//int value = rand() % 1000;

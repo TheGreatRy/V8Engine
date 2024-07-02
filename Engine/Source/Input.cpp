@@ -3,6 +3,14 @@
 
 bool Input::Initialize()
 {
+	int numKeys;
+	const uint8_t* keyboardState = SDL_GetKeyboardState(&numKeys);
+
+	m_keyboardStates.resize(numKeys);
+
+	std::copy(keyboardState, keyboardState + numKeys, m_keyboardStates.begin());
+	m_prevKeyboardStates = m_keyboardStates;
+
 	return true;
 }
 
@@ -15,7 +23,12 @@ void Input::Update()
 {
 	SDL_Event event;
 	SDL_PollEvent(&event);
+	//keyboard state
+	m_prevKeyboardStates = m_keyboardStates;
+	const uint8_t* keyboardState = SDL_GetKeyboardState(nullptr);
+	std::copy(keyboardState, keyboardState + m_keyboardStates.size(), m_keyboardStates.begin());
 
+	//mouse input
 	int x, y;
 	uint32_t buttonState = SDL_GetMouseState(&x, &y);
 
