@@ -20,10 +20,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Input.h" />
+    <ClInclude Include="Source\Particle.h" />
+    <ClInclude Include="Source\Random.h" />
+    <ClInclude Include="Source\ETime.h" />
     <ClInclude Include="Source\Vector2.h" />
     <ClInclude Include="Source\Renderer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\ETime.cpp" />
+    <ClCompile Include="Source\Particle.cpp" />
     <ClCompile Include="Source\Renderer.cpp" />
     <ClCompile Include="Source\Input.cpp" />
   </ItemGroup>
