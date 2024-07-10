@@ -8,6 +8,7 @@
 #include "MathUtil.h"
 #include "Model.h"
 #include "Color.h"
+#include "Transform.h"
 #include <SDL.h>
 #include <fmod.hpp>
 #include <stdlib.h>
@@ -52,9 +53,9 @@ int main(int argc, char* argv[])
 
 	FMOD::Sound* sound = nullptr;
 	//Test to see if audio system is working
-	audio->createSound("test.wav", FMOD_DEFAULT, 0, &sound);
+	/*audio->createSound("test.wav", FMOD_DEFAULT, 0, &sound);
 
-	audio->playSound(sound, 0, false, nullptr);
+	audio->playSound(sound, 0, false, nullptr);*/
 
 	//Sound Library
 	std::vector<FMOD::Sound*> sounds;
@@ -67,16 +68,16 @@ int main(int argc, char* argv[])
 	audio->createSound("close-hat.wav", FMOD_DEFAULT, 0, &sound);
 	sounds.push_back(sound);
 
-	Vector2 velocity{ 0,0 };
+	
 	Color color{ 1,1,1,0 };
 	std::vector<Vector2> points;
+	points.push_back(Vector2{ 5, 0 });
+	points.push_back(Vector2{ -5 , -5 });
 	points.push_back(Vector2{ -5 , 5 });
-	points.push_back(Vector2{ 0 , -5 });
-	points.push_back(Vector2{ 5 , 5 });
-	points.push_back(Vector2{ -5 , 5 });
+	points.push_back(Vector2{ 5 , 0 });
 	Model model{points, color};
-	Vector2 position{ 400,300 };
-	float rotation = 0;
+
+	Transform transform{ {renderer.GetWidth() >> 1, renderer.GetHeight() >> 1}, 0, 5 };
 
 	bool quit = false;
 	//main loop
@@ -93,11 +94,18 @@ int main(int argc, char* argv[])
 		{
 			quit = true;
 		}
-		
-		if (input.GetKeyDown(SDL_SCANCODE_LEFT)) return velocity.x += -100;
-		if (input.GetKeyDown(SDL_SCANCODE_RIGHT)) return velocity.x += 100;
-		if (input.GetKeyDown(SDL_SCANCODE_UP)) return velocity.y += 100;
-		if (input.GetKeyDown(SDL_SCANCODE_DOWN)) return velocity.y += -100;
+		float thrust = 0;
+		if (input.GetKeyDown(SDL_SCANCODE_LEFT)) transform.rotation += Math::DegtToRad(100) * time.GetDeltaTime();
+		if (input.GetKeyDown(SDL_SCANCODE_RIGHT)) transform.rotation -= Math::DegtToRad(100) * time.GetDeltaTime();
+
+		if (input.GetKeyDown(SDL_SCANCODE_UP)) thrust = 100;
+		if (input.GetKeyDown(SDL_SCANCODE_DOWN)) thrust = -100;
+
+		Vector2 velocity = Vector2{thrust, 0.0f}.Rotate(transform.rotation);
+		transform.position += velocity * time.GetDeltaTime();
+		transform.position.x = Math::Wrap(transform.position.x, (float)renderer.GetWidth());
+		transform.position.y = Math::Wrap(transform.position.y, (float)renderer.GetHeight());
+		//transform.rotation = velocity.Angle();
 		// UPDATE
 		
 		
@@ -112,7 +120,7 @@ int main(int argc, char* argv[])
 		{
 			float distance = (points.back() - mousePosition).Length();
 			if (distance > 5) points.push_back(mousePosition);
-		}*/
+		}
 		if (input.GetMouseButtonDown(0))
 		{
 			//std::cout << "mouse pressed" << std::endl;
@@ -121,8 +129,9 @@ int main(int argc, char* argv[])
 		
 			}
 		
-		}
-		//Audio Update and Tracking
+		}*/
+
+		//Audio Update and Button Tracking
 		audio->update();
 		if (input.GetKeyDown(SDL_SCANCODE_Q) && !input.GetPrevKeyDown(SDL_SCANCODE_Q))
 		{
@@ -215,7 +224,7 @@ int main(int argc, char* argv[])
 			renderer.DrawLine(362, 375, 538, 375);
 			renderer.DrawLine(395, 307, 325, 450);
 			*/
-		model.Draw(renderer, position, 0, 5);
+		model.Draw(renderer, transform);
 		// show screen
 		renderer.EndFrame();
 	}
