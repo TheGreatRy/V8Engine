@@ -1,10 +1,18 @@
 #pragma once
+#include "Vector2.h"
+#include "MathUtil.h"
 #include <random>
 
-int random() { return rand(); }
-int random(unsigned int max) { return rand() % max; }
-int random(int min, int max) { return min + random(max - min); }
+inline int random() { return rand(); }
+inline int random(unsigned int max) { return rand() % max; }
+inline int random(int min, int max) { return min + random(max - min); }
 
-float randomf() { return rand() / (float)RAND_MAX; }//0-1
-float randomf(float max) { return max + randomf(); }//scaler
-float randomf(float min, float max) { return min + randomf(max + min); }
+inline float randomf() { return rand() / (float)RAND_MAX; }//0-1
+inline float randomf(float max) { return max + randomf(); }//scaler
+inline float randomf(float min, float max) { return min + randomf(max + min); }
+
+inline Vector2 randomOnUnitCirlce()
+{
+	float angle = randomf(0, 360);
+	return Vector2{ Math::Cos(Math::DegtToRad(angle)), Math::Sin(Math::DegtToRad(angle)) };
+}

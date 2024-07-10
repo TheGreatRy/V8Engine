@@ -61,3 +61,16 @@ void Renderer::DrawPoint(float x, float y)
 {
 	SDL_RenderDrawPoint(m_renderer, x, y);
 }
+
+void Renderer::DrawRect(int x, int y, int w, int h)
+{
+	SDL_Rect rect{ x - w / 2 , y - h / 2, w, h };
+	SDL_RenderFillRect(m_renderer, &rect);
+}
+
+void Renderer::DrawRect(float x, float y, float w, float h)
+{
+	SDL_FRect Frect{ x - w / 2, y - h / 2, w, h };
+	SDL_RenderFillRectF(m_renderer, &Frect);
+
+}
