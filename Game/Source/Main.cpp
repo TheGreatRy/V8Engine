@@ -1,39 +1,12 @@
 //#include "../../Engine/Source/Test.h"
-#include "Vector2.h"
-#include "Renderer.h"
-#include "Input.h"
-#include "Particle.h"
-#include "Random.h"
-#include "ETime.h"
-#include "MathUtil.h"
-#include "Model.h"
-#include "Color.h"
-#include "Transform.h"
-#include <SDL.h>
-#include <fmod.hpp>
-#include <stdlib.h>
-#include <iostream>
-#include <vector>
-
+#include "Engine.h"
 
 int main(int argc, char* argv[])
 {
+	g_engine.Initalize();
+
 	//Variables/Systems
-	FMOD::System* audio;
-	FMOD::System_Create(&audio);
-
-	void* extradriverdata = nullptr;
-	audio->init(32, FMOD_INIT_NORMAL, extradriverdata);
-
 	
-	
-	Renderer renderer;
-	renderer.Initialize();
-	renderer.CreateWindow("Game Engine", 800, 600);
-
-	Input input;
-	input.Initialize();
-
 	Time time;
 	float offset = 0;
 	//std::vector<Vector2> points;
@@ -50,34 +23,28 @@ int main(int argc, char* argv[])
 	}*/
 	//Vector2 v1{ 400, 300 };
 	//Vector2 v2{ 700, 500 };
-
-	FMOD::Sound* sound = nullptr;
 	//Test to see if audio system is working
 	/*audio->createSound("test.wav", FMOD_DEFAULT, 0, &sound);
 
 	audio->playSound(sound, 0, false, nullptr);*/
 
 	//Sound Library
-	std::vector<FMOD::Sound*> sounds;
-	audio->createSound("bass.wav", FMOD_DEFAULT, 0, &sound);
-	sounds.push_back(sound);
-
-	audio->createSound("snare.wav", FMOD_DEFAULT, 0, &sound);
-	sounds.push_back(sound);
-	
-	audio->createSound("close-hat.wav", FMOD_DEFAULT, 0, &sound);
-	sounds.push_back(sound);
+	AUDIO->AddSound("bass.wav");
+	AUDIO->AddSound("snare.wav");
+	AUDIO->AddSound("close-hat.wav");
 
 	
 	Color color{ 1,1,1,0 };
+	//Ship Model
 	std::vector<Vector2> points;
 	points.push_back(Vector2{ 5, 0 });
 	points.push_back(Vector2{ -5 , -5 });
 	points.push_back(Vector2{ -5 , 5 });
 	points.push_back(Vector2{ 5 , 0 });
 	Model model{points, color};
-	Transform transform{ {renderer.GetWidth() >> 1, renderer.GetHeight() >> 1}, 0, 5 };
+	Transform transform{ {RENDERER->GetWidth() >> 1, RENDERER->GetHeight() >> 1}, 0, 5};
 
+	//Penrose Model
 	std::vector<Vector2> penPoints;
 	penPoints.push_back(Vector2{ 0, 5});
 	penPoints.push_back(Vector2{ 1, 5});
@@ -101,7 +68,7 @@ int main(int argc, char* argv[])
 	
 	Model penroseTri{ penPoints, color };
 
-	Transform penTransform{ {renderer.GetWidth() / 4, renderer.GetHeight() / 4}, 0, 10};
+	Transform penTransform{ {RENDERER->GetWidth() / 4, RENDERER->GetHeight() / 4}, 0, 10};
 
 	
 
@@ -114,40 +81,40 @@ int main(int argc, char* argv[])
 		//std::cout << time.GetDeltaTime() << std::endl;
 		
 		//INPUT
-		input.Update();
+		INPUT->Update();
 		
-		if (input.GetKeyDown(SDL_SCANCODE_ESCAPE))
+		if (INPUT->GetKeyDown(SDL_SCANCODE_ESCAPE))
 		{
 			quit = true;
 		}
 		float thrust = 0;
-		if (input.GetKeyDown(SDL_SCANCODE_LEFT)) transform.rotation += Math::DegtToRad(100) * time.GetDeltaTime();
-		if (input.GetKeyDown(SDL_SCANCODE_RIGHT)) transform.rotation -= Math::DegtToRad(100) * time.GetDeltaTime();
+		if (INPUT->GetKeyDown(SDL_SCANCODE_LEFT)) transform.rotation += Math::DegtToRad(100) * time.GetDeltaTime();
+		if (INPUT->GetKeyDown(SDL_SCANCODE_RIGHT)) transform.rotation -= Math::DegtToRad(100) * time.GetDeltaTime();
 
-		if (input.GetKeyDown(SDL_SCANCODE_UP)) thrust = 100;
-		if (input.GetKeyDown(SDL_SCANCODE_DOWN)) thrust = -100;
+		if (INPUT->GetKeyDown(SDL_SCANCODE_UP)) thrust = 100;
+		if (INPUT->GetKeyDown(SDL_SCANCODE_DOWN)) thrust = -100;
 
 		Vector2 velocity = Vector2{thrust, 0.0f}.Rotate(transform.rotation);
 		transform.position += velocity * time.GetDeltaTime();
-		transform.position.x = Math::Wrap(transform.position.x, (float)renderer.GetWidth());
-		transform.position.y = Math::Wrap(transform.position.y, (float)renderer.GetHeight());
+		transform.position.x = Math::Wrap(transform.position.x, (float)RENDERER->GetWidth());
+		transform.position.y = Math::Wrap(transform.position.y, (float)RENDERER->GetHeight());
 		//transform.rotation = velocity.Angle();
 		// UPDATE
 		
 		
 		//Mouse Tracking
-		Vector2 mousePosition = input.GetMousePostision();
-		/*if (input.GetMouseButtonDown(0) && !input.GetPrevMouseButtonDown(0))
+		Vector2 mousePosition = INPUT->GetMousePostision();
+		/*if (INPUT->GetMouseButtonDown(0) && !INPUT->GetPrevMouseButtonDown(0))
 		{
 			std::cout << "mouse pressed" << std::endl;
 			points.push_back(mousePosition);
 		}
-		if (input.GetMouseButtonDown(0) && input.GetPrevMouseButtonDown(0))
+		if (INPUT->GetMouseButtonDown(0) && INPUT->GetPrevMouseButtonDown(0))
 		{
 			float distance = (points.back() - mousePosition).Length();
 			if (distance > 5) points.push_back(mousePosition);
 		}
-		if (input.GetMouseButtonDown(0))
+		if (INPUT->GetMouseButtonDown(0))
 		{
 			//std::cout << "mouse pressed" << std::endl;
 			for (int i = 0; i < 10; i++) {
@@ -158,18 +125,18 @@ int main(int argc, char* argv[])
 		}*/
 
 		//Audio Update and Button Tracking
-		audio->update();
-		if (input.GetKeyDown(SDL_SCANCODE_Q) && !input.GetPrevKeyDown(SDL_SCANCODE_Q))
+		AUDIO->Update();
+		if (INPUT->GetKeyDown(SDL_SCANCODE_Q) && !INPUT->GetPrevKeyDown(SDL_SCANCODE_Q))
 		{
-			audio->playSound(sounds[0], 0, false, nullptr);
+			AUDIO->PlaySound("bass.wav");
 		}
-		if (input.GetKeyDown(SDL_SCANCODE_W) && !input.GetPrevKeyDown(SDL_SCANCODE_W))
+		if (INPUT->GetKeyDown(SDL_SCANCODE_W) && !INPUT->GetPrevKeyDown(SDL_SCANCODE_W))
 		{
-			audio->playSound(sounds[1], 0, false, nullptr);
+			AUDIO->PlaySound("snare.wav");
 		}
-		if (input.GetKeyDown(SDL_SCANCODE_E) && !input.GetPrevKeyDown(SDL_SCANCODE_E))
+		if (INPUT->GetKeyDown(SDL_SCANCODE_E) && !INPUT->GetPrevKeyDown(SDL_SCANCODE_E))
 		{
-			audio->playSound(sounds[2], 0, false, nullptr);
+			AUDIO->PlaySound("close-hat.wav");
 		}
 
 		//Particle Update
@@ -189,11 +156,11 @@ int main(int argc, char* argv[])
 		}*/
 		
 		// Begin Render
-		renderer.SetColor(0, 0, 0, 0);
-		renderer.BeginFrame();
+		RENDERER->SetColor(0, 0, 0, 0);
+		RENDERER->BeginFrame();
 		
 		
-		renderer.SetColor(255, 255, 255, 0);
+		RENDERER->SetColor(255, 255, 255, 0);
 		
 		float radius = 30.0f;
 		offset += (90 + time.GetDeltaTime());
@@ -203,57 +170,59 @@ int main(int argc, char* argv[])
 			float x = Math::Cos(Math::DegtToRad(angle + offset)) * Math::Sin(offset) * radius;
 			float y = Math::Sin(Math::DegtToRad(angle + offset)) * Math::Sin(offset) * radius;
 		
-			renderer.DrawRect(800 + x, 300 + y, 4.0f, 4.0f);
+			RENDERER->DrawRect(800 + x, 300 + y, 4.0f, 4.0f);
 		}
 		
 		//DRAW
 		//Particle Effects
 		for (Particle particle : particles)
 			{
-				particle.Draw(renderer);
+				particle.Draw(*RENDERER);
 			}
 		//Drawing Using Vectors
-		/*//renderer.DrawLine(v1.x, v1.y, v2.x, v2.y);
-			renderer.SetColor(255, 255, 255, 0);
+		/*//RENDERER->DrawLine(v1.x, v1.y, v2.x, v2.y);
+			RENDERER->SetColor(255, 255, 255, 0);
 			for (int i = 0; points.size() > 1 && i < (points.size() - 1); i++)
 			{
-				renderer.SetColor(rand() % 256, rand() % 256, rand() % 256, 0); // create random color
-				renderer.DrawLine(points[i].x, points[i].y, points[i + 1].x , points[i + 1].y );
+				RENDERER->SetColor(rand() % 256, rand() % 256, rand() % 256, 0); // create random color
+				RENDERER->DrawLine(points[i].x, points[i].y, points[i + 1].x , points[i + 1].y );
 			}*/
 		
 		//Random Line Generator
 		/*int value = rand() % 1000;
 			for (int i = 0; i <= value; i++)
 			{
-				//renderer.SetColor( 255, 255, 255, 0);
-				renderer.SetColor(rand() % 256, rand() % 256, rand() % 256, 0); // create random color
-				renderer.DrawPoint(400, 300);
+				//RENDERER->SetColor( 255, 255, 255, 0);
+				RENDERER->SetColor(rand() % 256, rand() % 256, rand() % 256, 0); // create random color
+				RENDERER->DrawPoint(400, 300);
 				// draw line
-				renderer.DrawLine(rand() % 800, rand() % 600, rand() % 800, rand() % 600);
+				RENDERER->DrawLine(rand() % 800, rand() % 600, rand() % 800, rand() % 600);
 			}
 			*/
 		
 		// Geometric Shape
 		/*outside lines
-			renderer.SetColor(255, 255, 255, 0);
-			renderer.DrawLine(100, 450, 350, 50);
-			renderer.DrawLine(100, 450, 175, 525);
-			renderer.DrawLine(350, 50, 450, 50);
-			renderer.DrawLine(450, 50, 700, 450);
-			renderer.DrawLine(700, 450, 625, 525);
-			renderer.DrawLine(175, 525, 625, 525);
+			RENDERER->SetColor(255, 255, 255, 0);
+			RENDERER->DrawLine(100, 450, 350, 50);
+			RENDERER->DrawLine(100, 450, 175, 525);
+			RENDERER->DrawLine(350, 50, 450, 50);
+			RENDERER->DrawLine(450, 50, 700, 450);
+			RENDERER->DrawLine(700, 450, 625, 525);
+			RENDERER->DrawLine(175, 525, 625, 525);
 			//inside lines
-			renderer.DrawLine(175, 525, 350, 225);
-			renderer.DrawLine(350, 225, 435, 375);
-			renderer.DrawLine(350, 50, 538, 375);
-			renderer.DrawLine(325, 450, 700, 450);
-			renderer.DrawLine(362, 375, 538, 375);
-			renderer.DrawLine(395, 307, 325, 450);
+			RENDERER->DrawLine(175, 525, 350, 225);
+			RENDERER->DrawLine(350, 225, 435, 375);
+			RENDERER->DrawLine(350, 50, 538, 375);
+			RENDERER->DrawLine(325, 450, 700, 450);
+			RENDERER->DrawLine(362, 375, 538, 375);
+			RENDERER->DrawLine(395, 307, 325, 450);
 			*/
-		model.Draw(renderer, transform);
-		penroseTri.Draw(renderer, penTransform);
+
+		model.Draw(*RENDERER, transform);
+		penroseTri.Draw(*RENDERER, penTransform);
+
 		// show screen
-		renderer.EndFrame();
+		RENDERER->EndFrame();
 	}
 	return 0;
 }
