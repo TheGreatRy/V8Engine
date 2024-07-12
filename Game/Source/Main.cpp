@@ -76,8 +76,34 @@ int main(int argc, char* argv[])
 	points.push_back(Vector2{ -5 , 5 });
 	points.push_back(Vector2{ 5 , 0 });
 	Model model{points, color};
-
 	Transform transform{ {renderer.GetWidth() >> 1, renderer.GetHeight() >> 1}, 0, 5 };
+
+	std::vector<Vector2> penPoints;
+	penPoints.push_back(Vector2{ 0, 5});
+	penPoints.push_back(Vector2{ 1, 5});
+	penPoints.push_back(Vector2{ 5, -2});
+	penPoints.push_back(Vector2{ 4, -3});
+	penPoints.push_back(Vector2{ -3, -3});
+	penPoints.push_back(Vector2{ -4, -2});
+	penPoints.push_back(Vector2{ 0, 5 });
+	penPoints.push_back(Vector2{ 3, -1 });
+	penPoints.push_back(Vector2{ -1, -1 });
+	penPoints.push_back(Vector2{ 0.5f, 1.5f });
+	penPoints.push_back(Vector2{ 0, 3 });
+	penPoints.push_back(Vector2{ -3, -3 });
+	penPoints.push_back(Vector2{ 4, -3 });
+	penPoints.push_back(Vector2{ 5, -2 });
+	penPoints.push_back(Vector2{ -1.5f, -2.0f });
+	penPoints.push_back(Vector2{ 0.5f, 1.5f });
+	penPoints.push_back(Vector2{ 2, -1 });
+	penPoints.push_back(Vector2{ 3, -1 });
+	penPoints.push_back(Vector2{ 0, 5 });
+	
+	Model penroseTri{ penPoints, color };
+
+	Transform penTransform{ {renderer.GetWidth() / 4, renderer.GetHeight() / 4}, 0, 10};
+
+	
 
 	bool quit = false;
 	//main loop
@@ -225,6 +251,7 @@ int main(int argc, char* argv[])
 			renderer.DrawLine(395, 307, 325, 450);
 			*/
 		model.Draw(renderer, transform);
+		penroseTri.Draw(renderer, penTransform);
 		// show screen
 		renderer.EndFrame();
 	}
