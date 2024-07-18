@@ -9,7 +9,7 @@ inline int random(int min, int max) { return min + random(max - min); }
 
 inline float randomf() { return rand() / (float)RAND_MAX; }//0-1
 inline float randomf(float max) { return max + randomf(); }//scaler
-inline float randomf(float min, float max) { return min + randomf(max + min); }
+inline float randomf(float min, float max) { return min + randomf(max - min); }
 
 inline Vector2 randomOnUnitCirlce()
 {

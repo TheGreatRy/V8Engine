@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Engine\Source\Bullet.cpp" />
+    <ClCompile Include="..\Engine\Source\Enemy.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\Player.cpp" />
   </ItemGroup>
@@ -28,6 +30,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Engine\Source\Bullet.h" />
+    <ClInclude Include="..\Engine\Source\Enemy.h" />
     <ClInclude Include="Source\Player.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

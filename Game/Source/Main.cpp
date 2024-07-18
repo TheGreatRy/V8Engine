@@ -1,6 +1,7 @@
 //#include "../../Engine/Source/Test.h"
 #include "Engine.h"
 #include "Player.h"
+#include "Enemy.h"
 #include "Scene.h";
 
 int main(int argc, char* argv[])
@@ -46,19 +47,22 @@ int main(int argc, char* argv[])
 
 	//Actor
 	Model* model = new Model{points, color};
+	Scene* scene = new Scene();
+
 	Transform transform{ {RENDERER.GetWidth() >> 1, RENDERER.GetHeight() >> 1}, 0, 5 };
 	Player* player = new Player(200, transform, model);
 	player->SetDamping(2.1f);
-	Scene* scene = new Scene();
+	player->SetTag("Player");
 	scene->AddActor(player);
 
-	for (int i = 0; i < 10; i++)
-	{
+	float spawnTimer = 2.0f;
 
-	Transform transform{ {randomf(rand() % 800), randomf(rand() % 600)}, 0, randomf(1,5)};
-	Player* player = new Player(randomf(100,200), transform, model);
-	player->SetDamping(2.1f);
-		scene->AddActor(player);
+	for (int i = 0; i < 100; i++)
+	{
+		Transform randTransform{ {(rand() % 800), (rand() % 600)}, 0, randomf(0.1f,0.5f)};
+		Player* randPlayer = new Player(randomf(200,500), randTransform, model);
+		randPlayer->SetDamping(2.0f);
+		scene->AddActor(randPlayer);
 	}
 
 	//Penrose Mode
@@ -107,6 +111,17 @@ int main(int argc, char* argv[])
 
 		
 		// UPDATE
+		spawnTimer -= time.GetDeltaTime();
+		/*if (spawnTimer <= 0)
+		{
+			Transform enemyTransform{ {(rand() % 800), (rand() % 600)}, 0, randomf(0.1f,0.5f) };
+			auto* enemyModel = new Model{ points, color };
+			auto* enemy = new Enemy{ 2.0f, enemyTransform, enemyModel};
+			enemy->SetDamping(2.0f);
+			enemy->SetTag("Enemy");
+			scene->AddActor(enemy);
+			spawnTimer = 2.0f;
+		}*/
 		
 		scene->Update(time.GetDeltaTime());
 		
