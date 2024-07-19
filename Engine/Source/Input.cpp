@@ -21,8 +21,7 @@ void Input::Shutdown()
 
 void Input::Update()
 {
-	SDL_Event event;
-	SDL_PollEvent(&event);
+	
 	//keyboard state
 	m_prevKeyboardStates = m_keyboardStates;
 	const uint8_t* keyboardState = SDL_GetKeyboardState(nullptr);

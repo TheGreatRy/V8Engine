@@ -19,10 +19,11 @@ void Scene::Update(float dt)
 	}
 	*/
 
-	m_actors.erase(m_actors.begin(), 
+	/*m_actors.erase(m_actors.begin(),
 		std::remove_if(m_actors.begin(), 
 		m_actors.end(), 
-		[](Actor* actor) {return actor->m_destroy;}));
+		[](Actor* actor) {return actor->m_destroy;}));*/
+	std::erase_if(m_actors, [](Actor* actor) {return actor->m_destroy;});
 	//collision
 	for (Actor* actor1 : m_actors)
 	{
@@ -54,6 +55,6 @@ void Scene::Draw(Renderer& renderer)
 
 void Scene::AddActor(Actor* actor)
 {
-	actor->m_scene->AddActor(actor);
+	actor->m_scene = this;
 	m_actors.push_back(actor);
 }
