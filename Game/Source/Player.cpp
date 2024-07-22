@@ -2,13 +2,14 @@
 #include "Bullet.h"
 #include "Scene.h"
 #include "Engine.h"
+#include "TheGame.h"
 
 void Player::OnCollision(Actor* actor)
 {
 	if (actor->GetTag() == "Enemy")
 	{
-		//std::cout << "collison\n";
 		m_destroy = true;
+		dynamic_cast<TheGame*>(m_scene->GetGame())->OnPlayerDeath();
 	}
 	
 }
@@ -16,13 +17,18 @@ void Player::OnCollision(Actor* actor)
 void Player::Update(float dt)
 {
 	float thrust = 0;
-	if (INPUT.GetKeyDown(SDL_SCANCODE_LEFT)) m_transform.rotation += Math::DegtToRad(100) * dt;
-	if (INPUT.GetKeyDown(SDL_SCANCODE_RIGHT)) m_transform.rotation -= Math::DegtToRad(100) * dt;
+	Vector2 direction{ 0,0 };
+	if (INPUT.GetKeyDown(SDL_SCANCODE_W)) direction.x = 1;
+	if (INPUT.GetKeyDown(SDL_SCANCODE_S)) direction.x = -1;
+	
+	if (INPUT.GetKeyDown(SDL_SCANCODE_Q)) direction.y = -1;
+	if (INPUT.GetKeyDown(SDL_SCANCODE_E)) direction.y = 1;
 
-	if (INPUT.GetKeyDown(SDL_SCANCODE_UP)) thrust = m_speed;
-	if (INPUT.GetKeyDown(SDL_SCANCODE_DOWN)) thrust = -m_speed;
+	if (INPUT.GetKeyDown(SDL_SCANCODE_A)) m_transform.rotation += Math::DegtToRad(100) * dt;
+	if (INPUT.GetKeyDown(SDL_SCANCODE_D)) m_transform.rotation -= Math::DegtToRad(100) * dt;
 
-	Vector2 acceleration = Vector2{ thrust, 0.0f }.Rotate(m_transform.rotation);
+
+	Vector2 acceleration = direction.Rotate(m_transform.rotation) * m_speed;
 
 	m_velocity += acceleration * dt;
 	
@@ -33,6 +39,12 @@ void Player::Update(float dt)
 	m_fireTimer -= dt;
 	if (INPUT.GetKeyDown(SDL_SCANCODE_SPACE) && m_fireTimer <=0)
 	{
+		m_fireTimer = 0.2f * m_fireModifier;
+
+		Vector2 direction = INPUT.GetMousePostision() - m_transform.position;
+		float angle = direction.Angle();
+
+		//actor
 		Color color{ 1,1,0 };
 		std::vector<Vector2> points;
 		points.push_back(Vector2{ 5, 0 });
@@ -41,7 +53,7 @@ void Player::Update(float dt)
 		points.push_back(Vector2{ 5 , 0 });
 
 		Model* model = new Model{ points, color };
-		Transform transform{ m_transform.position, m_transform.rotation, 1 };
+		Transform transform{ m_transform.position, angle, 1 };
 
 		Bullet* bullet = new Bullet{ 400.f, transform, model };
 		bullet->SetLifespan( 1 );

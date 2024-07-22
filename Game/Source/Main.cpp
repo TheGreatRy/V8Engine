@@ -1,16 +1,19 @@
-//#include "../../Engine/Source/Test.h"
 #include "Engine.h"
 #include "Player.h"
 #include "Enemy.h"
 #include "Scene.h";
+#include "Font.h"
+#include "Text.h"
 #include "GameData.h"
 #include "TheGame.h"
 
 int main(int argc, char* argv[])
 {
+
 	g_engine.Initalize();
 	TheGame* game = new TheGame(&g_engine);
 	game->Initialize();
+	
 	while (!g_engine.IsQuit()) 
 	{
 		g_engine.Update();
@@ -18,7 +21,7 @@ int main(int argc, char* argv[])
 
 		RENDERER.SetColor(0, 0, 0, 0);
 		RENDERER.BeginFrame();
-
+		
 		game->Draw(RENDERER);
 
 		RENDERER.EndFrame();

@@ -3,11 +3,14 @@
 
 class Renderer;
 class Actor;
+class Game;
 
 class Scene
 {
 public:
 	Scene() = default;
+
+	Scene(Game* game) : m_game{ game } {}
 
 	template<typename T>
 	T* GetActor();
@@ -16,8 +19,14 @@ public:
 	void Draw(Renderer& renderer);
 
 	void AddActor(Actor* actor);
+	void RemoveAll();
+
+	Game* GetGame() { return m_game; }
+
 protected:
 	std::list<Actor*> m_actors;
+
+	Game* m_game{ nullptr };
 };
 
 template<typename T>

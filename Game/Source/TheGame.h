@@ -1,5 +1,7 @@
 #pragma once
 #include "Game.h"
+#include "Font.h"
+#include "Text.h"
 
 class TheGame : public Game
 {
@@ -22,8 +24,17 @@ public:
 	void Update(float dt) override;
 
 	void Draw(Renderer& renderer) override;
+
+	void OnPlayerDeath();
 protected:
 	eState m_state{ eState::TITLE };
-	float m_SpawnTimer{ 0 };
-	float m_SpawnTime{ 0 };
+	float m_stateTimer{ 0 };
+
+	float m_spawnTimer{ 0 };
+	float m_spawnTime{ 0 };
+	
+
+	Font* m_font{ nullptr };
+	Text* m_textScore{ nullptr };
+	Text* m_textLives{ nullptr };
 };

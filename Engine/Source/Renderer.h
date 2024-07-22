@@ -1,5 +1,6 @@
 #pragma once
 #include <SDL.h>
+#include <SDL_ttf.h>
 #include <string>
 using namespace std;
 
@@ -24,6 +25,8 @@ public:
 	void DrawPoint(float x, float y);
 	void DrawRect(int x, int y, int w, int h);
 	void DrawRect(float x, float y, float w, float h);
+
+	friend class Text;
 private:
 	SDL_Window* m_window{ nullptr };
 	SDL_Renderer* m_renderer{ nullptr };
