@@ -23,9 +23,11 @@ int main(int argc, char* argv[])
 		RENDERER.BeginFrame();
 		
 		game->Draw(RENDERER);
+		g_engine.GetPartSys().Draw(RENDERER);
 
 		RENDERER.EndFrame();
 	}
+	g_engine.Shutdown();
 	
 	return 0;
 }

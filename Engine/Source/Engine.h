@@ -10,11 +10,13 @@
 #include "Color.h"
 #include "Transform.h"
 #include "Audio.h"
+#include "ParticleSystem.h"
 #include <SDL.h>
 #include <fmod.hpp>
 #include <stdlib.h>
 #include <iostream>
 #include <vector>
+#include <memory>
 
 class Engine
 {
@@ -30,16 +32,18 @@ public:
 	Input& GetInput() { return *m_input; }
 	Auydio& GetAudio() { return *m_audio; }
 	Time& GetTime() { return *m_time; }
+	ParticleSystem& GetPartSys() { return *m_partSys; }
 
 	bool IsQuit() { return quit; }
 
 private:
-	bool quit = false;
+	bool quit{ false };
 
-	Time* m_time{ nullptr };
-	Renderer* m_renderer{ nullptr };
-	Input* m_input{ nullptr };
-	Auydio* m_audio{ nullptr };
+	std::unique_ptr<Renderer> m_renderer{ nullptr };
+	std::unique_ptr<Time> m_time{ nullptr };
+	std::unique_ptr<Input> m_input{ nullptr };
+	std::unique_ptr<Auydio> m_audio{ nullptr };
+	std::unique_ptr<ParticleSystem> m_partSys{ nullptr };
 };
 
 extern Engine g_engine;

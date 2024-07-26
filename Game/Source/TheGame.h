@@ -2,6 +2,7 @@
 #include "Game.h"
 #include "Font.h"
 #include "Text.h"
+#include <memory>
 
 class TheGame : public Game
 {
@@ -28,6 +29,7 @@ public:
 	void OnPlayerDeath();
 protected:
 	eState m_state{ eState::TITLE };
+	float m_bpm{ 0 };
 	float m_stateTimer{ 0 };
 
 	float m_spawnTimer{ 0 };
@@ -35,6 +37,12 @@ protected:
 	
 
 	Font* m_font{ nullptr };
+	Font* m_titleFont{ nullptr };
+
+	Text* m_title{ nullptr };
+	Text* m_gameOver{ nullptr };
+
+	Text* m_startText{ nullptr };
 	Text* m_textScore{ nullptr };
 	Text* m_textLives{ nullptr };
 };

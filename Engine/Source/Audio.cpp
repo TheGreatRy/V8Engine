@@ -21,17 +21,22 @@ void Auydio::Update()
 
 bool Auydio::AddSound(const std::string& name)
 {
-	FMOD::Sound* sound = nullptr;
-	m_audio->createSound(name.c_str(), FMOD_DEFAULT, 0, &sound);
-
-	if (sound == nullptr)
+	if (!m_sounds[name])
 	{
-		std::cerr << "Could not load sound: " << name << std::endl;
-		return false;
-	}
+		FMOD::Sound* sound = nullptr;
+		m_audio->createSound(name.c_str(), FMOD_DEFAULT, 0, &sound);
 
-	m_sounds[name] = sound;
-	return true;
+		if (sound == nullptr)
+		{
+			std::cerr << "Could not load sound: " << name << std::endl;
+			return false;
+		}
+
+
+		m_sounds[name] = sound;
+		return true;
+	}
+	return false;
 }
 
 bool Auydio::PlaySound(const std::string& name)
@@ -46,4 +51,9 @@ bool Auydio::PlaySound(const std::string& name)
 	}
 	m_audio->playSound(m_sounds[name], 0, false, nullptr);
 	return true;
+}
+
+void Auydio::StopSound(const std::string& name)
+{
+	m_sounds[name]->release();
 }

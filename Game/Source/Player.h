@@ -1,5 +1,6 @@
 #pragma once
 #include "Actor.h"
+#include <memory>
 
 class Player : public Actor
 {

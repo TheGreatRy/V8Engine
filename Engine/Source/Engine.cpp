@@ -4,9 +4,9 @@ Engine g_engine;
 
 bool Engine::Initalize()
 {
-	m_renderer = new Renderer();
-	m_input = new Input();
-	m_audio = new Auydio();
+	m_renderer = std::make_unique<Renderer>();
+	m_input = std::make_unique <Input>();
+	m_audio = std::make_unique <Auydio>();
 
 	m_renderer->Initialize();
 	m_renderer->CreateWindow("Game Engine", 800, 600);
@@ -14,7 +14,8 @@ bool Engine::Initalize()
 	m_input->Initialize();
 	m_audio->Initialize();
 
-	m_time = new Time();
+	m_time = std::make_unique <Time>();
+	m_partSys = std::make_unique<ParticleSystem>();
 	return true;
 }
 
@@ -34,12 +35,13 @@ void Engine::Update()
 		{
 			quit = true;
 		}
-		if (event.type = SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
+		if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
 		{
-			quit == true;
+			quit = true;
 		}
 	}
 	m_time->Tick();
 	m_input->Update();
 	m_audio->Update();
+	m_partSys->Update(m_time->GetDeltaTime());
 }
